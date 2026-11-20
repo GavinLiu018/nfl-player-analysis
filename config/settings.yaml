@@ -1,0 +1,26 @@
+# Shared settings for the R (Shiny) and Python (Streamlit) apps.
+season: 2026
+
+# nflverse release assets (updated nightly during the season).
+sources:
+  reg:    https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_{season}.csv
+  week:   https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_{season}.csv
+  roster: https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_{season}.csv
+
+# Columns a downloaded file must contain to be accepted by refresh.
+required_columns:
+  reg:    [player_id, player_display_name, position, position_group, season, season_type, recent_team, games]
+  week:   [player_id, player_display_name, position, position_group, season, season_type, week, team]
+  roster: [season, team, gsis_id, full_name, status]
+
+# Ranking groups -> nflverse `position` values. OL and LS are not ranked (no stats).
+position_groups:
+  QB: [QB]
+  RB: [RB, FB]
+  WR: [WR]
+  TE: [TE]
+  K:  [K]
+  P:  [P]
+  DL: [DE, DT, NT, DL]
+  LB: [LB, ILB, MLB, OLB]
+  DB: [CB, DB, FS, S, SAF]

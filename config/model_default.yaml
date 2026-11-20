@@ -1,0 +1,97 @@
+# Default ranking model, shared by the R and Python apps.
+#
+# For every position:
+#   qualify  - a player must have games >= min_games AND volume >= min_volume
+#              to count toward the league-wide distribution (and get a rank).
+#   metrics  - expr is arithmetic over nflverse stats columns: + - * / ( ) and numbers.
+#              higher_is_better: false flips the percentile (e.g. interception rate).
+#              weight 0-10; include: false keeps the metric visible but unused.
+#
+# normalization: percentile (default) or zscore.
+name: Balanced (default)
+normalization: percentile
+positions:
+  QB:
+    qualify: {min_games: 4, volume: "attempts / games", min_volume: 14}
+    metrics:
+      - {key: epa_db,    label: "EPA / dropback", expr: "passing_epa / (attempts + sacks_suffered)", higher_is_better: true,  weight: 8}
+      - {key: ypa,       label: "Yards / att",    expr: "passing_yards / attempts",                  higher_is_better: true,  weight: 6}
+      - {key: cpoe,      label: "CPOE",           expr: "passing_cpoe",                              higher_is_better: true,  weight: 5}
+      - {key: td_rate,   label: "TD %",           expr: "passing_tds / attempts",                    higher_is_better: true,  weight: 5}
+      - {key: int_rate,  label: "INT %",          expr: "passing_interceptions / attempts",          higher_is_better: false, weight: 5}
+      - {key: sack_rate, label: "Sack %",         expr: "sacks_suffered / (attempts + sacks_suffered)", higher_is_better: false, weight: 3}
+      - {key: pass_ypg,  label: "Pass yds / g",   expr: "passing_yards / games",                     higher_is_better: true,  weight: 4}
+      - {key: rush_ypg,  label: "Rush yds / g",   expr: "rushing_yards / games",                     higher_is_better: true,  weight: 2}
+  RB:
+    qualify: {min_games: 4, volume: "(carries + targets) / games", min_volume: 8}
+    metrics:
+      - {key: rush_ypg,   label: "Rush yds / g",   expr: "rushing_yards / games",          higher_is_better: true,  weight: 6}
+      - {key: ypc,        label: "Yards / carry",  expr: "rushing_yards / carries",        higher_is_better: true,  weight: 4}
+      - {key: rush_epa,   label: "Rush EPA / carry", expr: "rushing_epa / carries",        higher_is_better: true,  weight: 5}
+      - {key: tgt_pg,     label: "Targets / g",    expr: "targets / games",                higher_is_better: true,  weight: 3}
+      - {key: rec_ypg,    label: "Rec yds / g",    expr: "receiving_yards / games",        higher_is_better: true,  weight: 4}
+      - {key: td_pg,      label: "TDs / g",        expr: "(rushing_tds + receiving_tds) / games", higher_is_better: true, weight: 4}
+      - {key: fum_lost_pg, label: "Fumbles lost / g", expr: "(rushing_fumbles_lost + receiving_fumbles_lost) / games", higher_is_better: false, weight: 2}
+  WR:
+    qualify: {min_games: 4, volume: "targets / games", min_volume: 3}
+    metrics:
+      - {key: rec_ypg,    label: "Rec yds / g",     expr: "receiving_yards / games",  higher_is_better: true, weight: 7}
+      - {key: tgt_pg,     label: "Targets / g",     expr: "targets / games",          higher_is_better: true, weight: 4}
+      - {key: tgt_share,  label: "Target share",    expr: "target_share",             higher_is_better: true, weight: 5}
+      - {key: wopr,       label: "WOPR",            expr: "wopr",                     higher_is_better: true, weight: 4}
+      - {key: ypt,        label: "Yards / target",  expr: "receiving_yards / targets", higher_is_better: true, weight: 4}
+      - {key: catch_rate, label: "Catch %",         expr: "receptions / targets",     higher_is_better: true, weight: 2}
+      - {key: rec_epa,    label: "Rec EPA / target", expr: "receiving_epa / targets", higher_is_better: true, weight: 5}
+      - {key: td_pg,      label: "Rec TDs / g",     expr: "receiving_tds / games",    higher_is_better: true, weight: 4}
+  TE:
+    qualify: {min_games: 4, volume: "targets / games", min_volume: 2}
+    metrics:
+      - {key: rec_ypg,    label: "Rec yds / g",     expr: "receiving_yards / games",  higher_is_better: true, weight: 7}
+      - {key: tgt_pg,     label: "Targets / g",     expr: "targets / games",          higher_is_better: true, weight: 4}
+      - {key: tgt_share,  label: "Target share",    expr: "target_share",             higher_is_better: true, weight: 4}
+      - {key: ypt,        label: "Yards / target",  expr: "receiving_yards / targets", higher_is_better: true, weight: 4}
+      - {key: catch_rate, label: "Catch %",         expr: "receptions / targets",     higher_is_better: true, weight: 3}
+      - {key: rec_epa,    label: "Rec EPA / target", expr: "receiving_epa / targets", higher_is_better: true, weight: 5}
+      - {key: td_pg,      label: "Rec TDs / g",     expr: "receiving_tds / games",    higher_is_better: true, weight: 4}
+  DL:
+    qualify: {min_games: 4, volume: "(def_tackles_solo + def_tackle_assists + def_qb_hits) / games", min_volume: 1.5}
+    metrics:
+      - {key: sacks_pg,  label: "Sacks / g",          expr: "def_sacks / games",            higher_is_better: true, weight: 8}
+      - {key: hits_pg,   label: "QB hits / g",        expr: "def_qb_hits / games",          higher_is_better: true, weight: 6}
+      - {key: tfl_pg,    label: "TFL / g",            expr: "def_tackles_for_loss / games", higher_is_better: true, weight: 5}
+      - {key: tkl_pg,    label: "Tackles / g",        expr: "(def_tackles_solo + def_tackle_assists) / games", higher_is_better: true, weight: 3}
+      - {key: ff_pg,     label: "Forced fumbles / g", expr: "def_fumbles_forced / games",   higher_is_better: true, weight: 3}
+      - {key: pd_pg,     label: "Passes def / g",     expr: "def_pass_defended / games",    higher_is_better: true, weight: 1}
+  LB:
+    qualify: {min_games: 4, volume: "(def_tackles_solo + def_tackle_assists) / games", min_volume: 2}
+    metrics:
+      - {key: tkl_pg,    label: "Tackles / g",        expr: "(def_tackles_solo + def_tackle_assists) / games", higher_is_better: true, weight: 6}
+      - {key: tfl_pg,    label: "TFL / g",            expr: "def_tackles_for_loss / games", higher_is_better: true, weight: 4}
+      - {key: sacks_pg,  label: "Sacks / g",          expr: "def_sacks / games",            higher_is_better: true, weight: 4}
+      - {key: hits_pg,   label: "QB hits / g",        expr: "def_qb_hits / games",          higher_is_better: true, weight: 2}
+      - {key: int_pg,    label: "INTs / g",           expr: "def_interceptions / games",    higher_is_better: true, weight: 3}
+      - {key: pd_pg,     label: "Passes def / g",     expr: "def_pass_defended / games",    higher_is_better: true, weight: 3}
+      - {key: ff_pg,     label: "Forced fumbles / g", expr: "def_fumbles_forced / games",   higher_is_better: true, weight: 2}
+  DB:
+    qualify: {min_games: 4, volume: "(def_tackles_solo + def_tackle_assists) / games", min_volume: 1.5}
+    metrics:
+      - {key: int_pg,    label: "INTs / g",           expr: "def_interceptions / games",    higher_is_better: true, weight: 6}
+      - {key: pd_pg,     label: "Passes def / g",     expr: "def_pass_defended / games",    higher_is_better: true, weight: 6}
+      - {key: tkl_pg,    label: "Tackles / g",        expr: "(def_tackles_solo + def_tackle_assists) / games", higher_is_better: true, weight: 3}
+      - {key: tfl_pg,    label: "TFL / g",            expr: "def_tackles_for_loss / games", higher_is_better: true, weight: 1}
+      - {key: ff_pg,     label: "Forced fumbles / g", expr: "def_fumbles_forced / games",   higher_is_better: true, weight: 2}
+      - {key: def_td_pg, label: "Def TDs / g",        expr: "def_tds / games",              higher_is_better: true, weight: 1}
+  K:
+    qualify: {min_games: 4, volume: "fg_att / games", min_volume: 1}
+    metrics:
+      - {key: fg_pct,    label: "FG %",          expr: "fg_made / fg_att",                       higher_is_better: true, weight: 6}
+      - {key: fg50_pg,   label: "50+ FG made / g", expr: "(fg_made_50_59 + fg_made_60_) / games", higher_is_better: true, weight: 4}
+      - {key: fg_made_pg, label: "FG made / g",  expr: "fg_made / games",                        higher_is_better: true, weight: 2}
+      - {key: pat_pct,   label: "PAT %",         expr: "pat_made / pat_att",                     higher_is_better: true, weight: 2}
+  P:
+    qualify: {min_games: 4, volume: "pt_att / games", min_volume: 2}
+    metrics:
+      - {key: net_avg,   label: "Net avg",       expr: "pt_net_yards / pt_att",  higher_is_better: true,  weight: 6}
+      - {key: gross_avg, label: "Gross avg",     expr: "pt_yards / pt_att",      higher_is_better: true,  weight: 2}
+      - {key: in20_rate, label: "Inside-20 %",   expr: "pt_inside_20 / pt_att",  higher_is_better: true,  weight: 5}
+      - {key: tb_rate,   label: "Touchback %",   expr: "pt_touchback / pt_att",  higher_is_better: false, weight: 2}

@@ -1,0 +1,33 @@
+abbr,name,conference,division,color
+BUF,Buffalo Bills,AFC,AFC East,#00338D
+MIA,Miami Dolphins,AFC,AFC East,#008E97
+NE,New England Patriots,AFC,AFC East,#002244
+NYJ,New York Jets,AFC,AFC East,#125740
+BAL,Baltimore Ravens,AFC,AFC North,#241773
+CIN,Cincinnati Bengals,AFC,AFC North,#FB4F14
+CLE,Cleveland Browns,AFC,AFC North,#311D00
+PIT,Pittsburgh Steelers,AFC,AFC North,#FFB612
+HOU,Houston Texans,AFC,AFC South,#03202F
+IND,Indianapolis Colts,AFC,AFC South,#002C5F
+JAX,Jacksonville Jaguars,AFC,AFC South,#006778
+TEN,Tennessee Titans,AFC,AFC South,#4B92DB
+DEN,Denver Broncos,AFC,AFC West,#FB4F14
+KC,Kansas City Chiefs,AFC,AFC West,#E31837
+LV,Las Vegas Raiders,AFC,AFC West,#A5ACAF
+LAC,Los Angeles Chargers,AFC,AFC West,#0080C6
+DAL,Dallas Cowboys,NFC,NFC East,#003594
+NYG,New York Giants,NFC,NFC East,#0B2265
+PHI,Philadelphia Eagles,NFC,NFC East,#004C54
+WAS,Washington Commanders,NFC,NFC East,#5A1414
+CHI,Chicago Bears,NFC,NFC North,#0B162A
+DET,Detroit Lions,NFC,NFC North,#0076B6
+GB,Green Bay Packers,NFC,NFC North,#203731
+MIN,Minnesota Vikings,NFC,NFC North,#4F2683
+ATL,Atlanta Falcons,NFC,NFC South,#A71930
+CAR,Carolina Panthers,NFC,NFC South,#0085CA
+NO,New Orleans Saints,NFC,NFC South,#D3BC8D
+TB,Tampa Bay Buccaneers,NFC,NFC South,#D50A0A
+ARI,Arizona Cardinals,NFC,NFC West,#97233F
+LA,Los Angeles Rams,NFC,NFC West,#003594
+SF,San Francisco 49ers,NFC,NFC West,#AA0000
+SEA,Seattle Seahawks,NFC,NFC West,#69BE28
